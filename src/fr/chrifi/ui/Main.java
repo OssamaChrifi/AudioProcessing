@@ -146,7 +146,7 @@ public class Main extends Application {
 				end=AudioIO.startAudioProcessing(audioInput, audioOutput,sampleRate, bufferSize);
 				SignalView.setEnd(end);
 				SignalView.timer.start();
-				end.terminateAudioThread(5000);
+				end.terminateAudioThread(2000);
 				System.out.println("Audio processing stop !");	
 				} 
 			catch (LineUnavailableException e1) { e1.printStackTrace(); }

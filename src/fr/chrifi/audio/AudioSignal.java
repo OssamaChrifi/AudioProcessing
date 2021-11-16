@@ -67,11 +67,6 @@ public class AudioSignal {
 	/** Plays the buffer content to the given output.
 	* @return false if at end of stream */
 	public boolean playTo(SourceDataLine audioOutput) {
-		 /*byte[] byteBuffer = new byte[sampleBuffer.length * 2];
-		 for (int i = 0; i < sampleBuffer.length; i++)
-		 System.arraycopy(convertDoubleToByteArray(sampleBuffer[i]), 0, byteBuffer, i * 2, 2);
-		audioOutput.write(byteBuffer, 0, byteBuffer.length);
-		return true;*/
 		byte[] byteBuffer = new byte[sampleBuffer.length*2];    
 
         for (int i=0; i<sampleBuffer.length; i++) {
@@ -86,12 +81,6 @@ public class AudioSignal {
         if (audioOutput.write(byteBuffer, 0, byteBuffer.length) == -1) return false;
         return true;
 	}
-	
-	public byte [] convertDoubleToByteArray(double number) {
-		 ByteBuffer byteBuffer = ByteBuffer.allocate(Double.BYTES);
-		 byteBuffer.putDouble(number);
-		 return byteBuffer.array();
-		}
 	
 	public Complex[] ComputeFFT(AudioSignal input) {
 		Complex[] complex= new Complex[input.getFrameSize()];
