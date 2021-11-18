@@ -6,6 +6,7 @@ import javax.sound.sampled.*;
 
 /** A collection of static utilities related to the audio system. */
 public class AudioIO {
+	private static int sampleRate;
 
 /** Displays every audio mixer available on the current system. */
 	public static void printAudioMixers() {
@@ -78,6 +79,14 @@ Example of use: getMixerInfo("Macbook default output") */
 		as.terminateAudioThread(time);
 		as.getAudioInput().stop();as.getAudioInput().close();
 		as.getAudioOutput().stop();as.getAudioOutput().close();
+	}
+	
+	public static int getSampleRate() {
+		return sampleRate;
+	}
+	
+	public static void setSampleRate(int sampleRate) {
+		AudioIO.sampleRate = sampleRate;
 	}
 	
 	public static void main(String[] args){

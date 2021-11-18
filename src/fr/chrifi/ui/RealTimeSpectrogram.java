@@ -25,8 +25,8 @@ public class RealTimeSpectrogram extends Canvas{
 		WritableImage image = new WritableImage(250,250);
 		PixelWriter pixel = image.getPixelWriter();
 		for(int y=0; y<250; y++) {
-			Spectre=Spectrogram.getSpectre()[Math.abs(Spectrogram.getSpectre().length/2-y*(int)Spectrogram.getSpectre().length/250)].abs();
-			pixel.setColor(x, y, Color.gray(0.0,Spectre/200));				
+			Spectre=Spectrogram.getSpectre()[y*(int)Spectrogram.getSpectre().length/500].abs();
+			pixel.setColor(x, y, Color.gray(0.0,Spectre/200*1.5));				
 		}	
 		graphics_context.drawImage(image, 55, 20);
 	}

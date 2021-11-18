@@ -67,6 +67,7 @@ public class Main extends Application {
 			if(cb1.getSelectionModel().getSelectedItem() == "SR_8000")  sampleRate = 8000;
 			if(cb1.getSelectionModel().getSelectedItem() == "SR_16000")  sampleRate = 16000;
 			if(cb1.getSelectionModel().getSelectedItem() == "SR_32000")  sampleRate = 32000;
+			AudioIO.setSampleRate(sampleRate);
 		});
 		cb2.setOnAction(e -> {
 			if(cb2.getSelectionModel().getSelectedItem() == "SZ_256")  bufferSize = 256;
@@ -114,8 +115,8 @@ public class Main extends Application {
 	 private Node createRightContent(){
 		 Group g = new Group();
 		//defining the axes
-	     final NumberAxis yaxis = new NumberAxis(0,40,5);
-	     final NumberAxis xaxis = new NumberAxis(0,4000/3,500/3);
+	     final NumberAxis yaxis = new NumberAxis(0,120,20);
+	     final NumberAxis xaxis = new NumberAxis(0,4000,200);
 	     xaxis.setLabel("f");
 	     yaxis.setLabel("Amplitude");
 	     //creating the chart
@@ -146,7 +147,7 @@ public class Main extends Application {
 				end=AudioIO.startAudioProcessing(audioInput, audioOutput,sampleRate, bufferSize);
 				SignalView.setEnd(end);
 				SignalView.timer.start();
-				end.terminateAudioThread(2000);
+				end.terminateAudioThread(1000);
 				System.out.println("Audio processing stop !");	
 				} 
 			catch (LineUnavailableException e1) { e1.printStackTrace(); }

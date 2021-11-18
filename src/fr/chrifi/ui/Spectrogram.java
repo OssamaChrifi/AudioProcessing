@@ -1,5 +1,6 @@
 package fr.chrifi.ui;
 
+import fr.chrifi.audio.AudioIO;
 import fr.chrifi.audio.AudioProcessor;
 import fr.chrifi.math.Complex;
 import javafx.scene.chart.Axis;
@@ -21,7 +22,7 @@ public class Spectrogram extends LineChart<Number,Number>{
 	
 	public static void updatData(AudioProcessor end) {
 		spectre=end.getInputSignal().ComputeFFT(end.getInputSignal());
-		double FFT_BIN_WIDTH = end.getInputSignal().getFrameSize()/spectre.length;
+		double FFT_BIN_WIDTH = 1.0052*AudioIO.getSampleRate()/end.getInputSignal().getFrameSize();
 		double Frequency,Magnitude;
 		series.getData().clear();
 		for (int i = 0; i < spectre.length; i++) { 
