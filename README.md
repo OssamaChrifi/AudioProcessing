@@ -59,6 +59,8 @@ SignalView (signal visualization), VuMeter (dB level monitoring), Spectrogram, e
 * the ”audio” package is dedicated to audio processing classes, e.g., AudioSignal (signal container), AudioProcessor (audio I/O processor), and
 AudioIO (hub for I/O resources, e.g., microphones, headphones, etc).
 * the ”audio.effect” subpackage contained specialized audio effects, e.g., the
+* the ”math” package comprises classes that handle math operations, e.g.,
+Complex numbers and Fast Fourier Transform.
 
 #### 3.2 Basic audio processing with Java
 There are two java packages dedicated to audio operations:
