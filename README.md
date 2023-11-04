@@ -107,3 +107,67 @@ fill a buffer of bytes with a sound wave, and then write this buffer to the
 audio output by means of the SourceDataLine.write() method.
 The same process in the reverse way allows you to record sound from a
 microphone using a TargetDataLine.
+
+#### 3.3 Populating the audio package
+We have to write three classes for our application to properly process audio:
+* AudioSignal: this is a generic container for audio samples represented
+as double’s ; if offers methods to modify sample values, get the value of
+particular sample, compute the level of the signal in dB.
+* AudioProcessor : the main audio processor that offers methods to record
+audio signals from a microphone, play signals to a headphone, and compute the FFT of the input signal ; it also offers the ability to run concurrently as a Thread (question: why is this crucial when doing audio inside
+a graphic application?)
+* AudioIO : a ”hub” offering methods to retrieve audio lines (microphones,
+headphones, etc), and which knows how to start the whole audio processing.
+
+### 4 Connecting the audio part with JavaFX
+If everything inside the audio package works as expected, it is time to connect
+it to classes inside the ”ui” package. We will be much less explicit here, as if
+you have reached this point this probably means you may have gained sufficient
+autonomy to design things on your own.
+There is a first series of things to be done to make it possible for the user
+to set audio parameters (sample rate, audio inputs and outputs, etc) and start
+audio processing directly from the JavaFX interface: this is the role of the various widgets in the Toolbar, see Figure 1. Here it will prove useful to resort
+not only to Button’s, but also to ComboBox’s, using the various static methods
+inside AudioIO to fill the content of the various ComboBox’s. Beware here: it
+is strictly forbidden to call a resource intensive piece of code from inside an
+EventHandler! (this should remind you of a similar rule when writing IRQ handlers for microcontrollers...). So as general rule of thumb: always move resource
+intensive code inside a separate thread, and just start the thread from inside
+your EventHandler, letting it execute nicely on its own (whatever the time this
+resource intensive task takes to terminate, YOUR EventHandler can swiftly
+terminate and give the control back to the JavaFX machinery, and this machinery can thus proceed back to handling mouse events and displaying things on
+the screen... otherwise it would just FREEZE). As a rule: audio processing is
+resource intensive ; writing huge files to the network is resource intensive ; doing artificial intelligence calculation is resource intensive ; System.out.println()
+alone... is not. See the point?
+Then, as a second item of business, you may want to consider the following
+general architecture for the rest of the ”ui” package:
+* write a ui.SignalView class that extends LineChart<Number,Number>
+and can display an AudioSignal. You need to have a method updateData()
+that would update the chart content from an AudioSignal. This method
+may be called periodically from a javafx.animation.AnimationTimer,
+which is probably the most efficient way as THIS timer knows what is the
+best update frequency (it is useless and thus inefficient to update charts
+at a higher pace than that of the whole JavaFX interface, usually around
+10Hz!).
+* write a ui.VuMeter class that can displays the signal level (see Figure 1).
+It may extend Canvas and draw a vertical green/orange/red rectangle depending on the signal level. You may want to use Canvas.getGraphicsContext2D()
+to write geometrical shapes and fill them with colours. Here again you need
+an update() method that can update the color and size of the VuMeter
+rectangle, and may also be called from the same AnimationTimer as above.
+* at this point, you may want to add spectrum vizualisation: for this you will
+first need to add a Complex[] computeFFT() method to the AudioSignal
+class. You may want to base your code on
+https://introcs.cs.princeton.edu/java/97data/Complex.java.html
+10
+and
+[a link](https://introcs.cs.princeton.edu/java/97data/FFT.java.html)
+It is probably time to create a math package and add these two classes,
+FFT and Complex, to it, and then test them separately until they work as
+expected (for example by feeding the FFT algorithm with a well known
+signal created by hand).
+Then if everything works great, create a ui.Spectrogram class that extends Canvas. We will use a WritableImage to draw the spectrogram
+in real time (see the rightmost image in Figure 1 to see what it could
+look like). GraphicsContext.drawImage() in effect displays this image on the screen (more exactly: inside the Canvas area). Using the
+getPixelWriter() method, you can obtain a tool that allwos you to modify the image pixels one by one, which, with some clever coding, should
+get the job done... The idea is to draw one vertical line after the other,
+filling each line with the (absolute value of the) coefficients of the Fourier
+transform of the signal...
