@@ -39,9 +39,10 @@ to where your code is located. Change to the folder where all compiled classes
 are located (e.g. ”bin” when working with Eclipse), and then run the following
 command (everything on a single line):
 
-'''bash
-java --module-path path-to-javafx-libs --add-modules ALL-MODULE-PATH
-application.Main
+'''console
+
+java --module-path path-to-javafx-libs --add-modules ALL-MODULE-PATH application.Main
+
 '''
 where ”path-to-javafx-libs” has to replaced by the path to your javafx libraries (remember? you add to write down somewhere where this folder is
 located...)
