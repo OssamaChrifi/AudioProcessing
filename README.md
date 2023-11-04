@@ -59,7 +59,49 @@ SignalView (signal visualization), VuMeter (dB level monitoring), Spectrogram, e
 * the ”audio” package is dedicated to audio processing classes, e.g., AudioSignal (signal container), AudioProcessor (audio I/O processor), and
 AudioIO (hub for I/O resources, e.g., microphones, headphones, etc).
 * the ”audio.effect” subpackage contained specialized audio effects, e.g., the
-Echo class, the PassThrough class, etc.
-* The ”math” package comprises classes that handle math operations, e.g.,
-Complex numbers and Fast Fourier Transform.
 
+#### 3.2 Basic audio processing with Java
+There are two java packages dedicated to audio operations:
+* the javax.sound.sampled package, for audio I/O
+* the javax.sound.midi package, for MIDI4
+related development
+We will stick to the javax.sound.sampled package from now on. Among the
+numerous classes inside this package, only a couple is really useful to scrutinize
+into:
+* SourceDataLine: an audio rendering device (an audio line to which data
+may be written, e.g., a headphone)
+* TargetDataLine: an audio capture device (a line from which audio data
+can be read, like a microphone)
+* Mixer : an audio device with one or more (input or output) lines. You can
+think of a Mixer as a part of a soundcard. Usually there is one Mixer for
+audio outputs (headphones), and another for audio inputs (microphones).
+* Mixer.Info and Line.Info : represent information about an audio mixer
+or an audio line, including the product’s name, version, and vendor (for
+example : ”USB Audio Device” or ”External Headphones”)
+* AudioFormat : specifies the sample rate, sample size in bits, number of
+channels, etc
+* AudioSystem: acts as the entry point to obtain audio resources. It is
+where most things start... since with no resource you cannot do anything.
+
+The basic process when one wants to play a sound is more or less the following
+one:
+
+1. Obtain a SourceDataLine, either the default one (usually connected to
+the headphone plug), or for a specific mixer if your laptop is equipped
+with more than one soundcard or has multiple audio outputs ; to begin
+with, you may want to simply use:
+AudioSystem.getTargetDataLine(AudioFormat)
+where AudioFormat may be initialized with a sample rate of 8000Hz, 8
+bits per sample, and a ”monophonic” (one channel) configuration as in:
+new AudioFormat(8000, 8, 1, true, true)
+This will give you the default audio output, and if you are lucky, this
+corresponds to the embedded loudspeaker, or the default headphone plug
+:) If you cannot here anything, do not panic, this just means your default
+audio output is not the one you wanted and you will have to write a few
+more lines of code to correct this (see below, AudioIO class).
+2. call open() and then start() on the SourceDataLine you just obtained.
+3. Once you have a working SourceDataLine, it is enough to (periodically)
+fill a buffer of bytes with a sound wave, and then write this buffer to the
+audio output by means of the SourceDataLine.write() method.
+The same process in the reverse way allows you to record sound from a
+microphone using a TargetDataLine.
