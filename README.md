@@ -159,7 +159,7 @@ class. You may want to base your code on
 https://introcs.cs.princeton.edu/java/97data/Complex.java.html
 10
 and
-[a link](https://introcs.cs.princeton.edu/java/97data/FFT.java.html)
+https://introcs.cs.princeton.edu/java/97data/FFT.java.html
 It is probably time to create a math package and add these two classes,
 FFT and Complex, to it, and then test them separately until they work as
 expected (for example by feeding the FFT algorithm with a well known
